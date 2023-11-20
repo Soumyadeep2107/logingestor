@@ -1,0 +1,90 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Ingestor</title>
+</head>
+<body>
+    <h1>Log Ingestor</h1>
+    <form id="logForm" onsubmit="submitForm(); return false;" enctype="multipart/form-data" action="{{ url_for('ingest_log') }}">
+        <label for="level">Level:</label>
+        <input type="text" id="level" name="level" required><br>
+        <br>
+        
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message" required>
+        <br>
+        <br>
+
+        <label for="resourceId">Resource ID:</label>
+        <input type="text" id="resourceId" name="resourceId" required>
+        <br>
+        <br>
+        
+        <label for="timestamp">Timestamp:</label>
+        <input type="text" id="timestamp" name="timestamp" required>
+        <br>
+        <br>
+
+        <label for="traceId">Trace ID:</label>
+        <input type="text" id="traceId" name="traceId" required>
+        <br>
+        <br>
+
+        <label for="spanId">Span ID:</label>
+        <input type="text" id="spanId" name="spanId" required>
+        <br>
+        <br>
+
+        <label for="commit">Commit:</label>
+        <input type="text" id="commit" name="commit" required>
+        <br>
+        <br>
+
+        <label for="parentResourceId">Parent Resource ID:</label>
+        <input type="text" id="parentResourceId" name="parentResourceId" required>
+        <br>
+        <br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        function submitForm() {
+            // Get form data
+            var formData = {
+                level: document.getElementById('level').value,
+                message: document.getElementById('message').value,
+                resourceId: document.getElementById('resourceId').value,
+                timestamp: document.getElementById('timestamp').value,
+                traceId: document.getElementById('traceId').value,
+                spanId: document.getElementById('spanId').value,
+                commit: document.getElementById('commit').value,
+                metadata: {
+                    parentResourceId: document.getElementById('parentResourceId').value
+                }
+            };
+
+            // Send data to the server
+            fetch('/ingest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('Log data submitted successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting log data.');
+            });
+        }
+    </script>
+</body>
+</html>
